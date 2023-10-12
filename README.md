@@ -1,2 +1,2 @@
-# odin-project-calculator
+# Odin Project Calculator
 Odin Project Calculator
