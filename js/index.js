@@ -1,15 +1,16 @@
 class Calculator {
     constructor () {
-        this.answer = null
-        this.cumulative = null
+
         this.operator = null
         this.number = ""
         this.firstNumber = null
-        this.secondNumber = null
         this.screen = ""
     }
 
     operation (num1, num2, operator) {
+        num1 = num1*1
+        num2 = num2*1
+
         switch (operator) {
             case "+": return num1+num2
             case "-": return num1-num2
@@ -19,9 +20,6 @@ class Calculator {
         }
     }
 
-    equals () {
-
-    }
 
     input (value) {
 
@@ -29,35 +27,74 @@ class Calculator {
             switch (value) {
                 case ".": 
                     this.number = "0"+value
+                    this.screen += ` ${this.number}`
                     break;
+                case "+":                
+                case "x":
+                case "mod":
+                case "/":
+                case "=":
+                case "AC":
+                    break;
+                
                 default: 
                     this.number = value
-            }
-
-            this.screen = this.number
+                    this.screen += ` ${this.number}`
+                    break;
+            }            
         }
 
         else {
             switch (value) {
+                case "0":
+                    if (this.number === "0") break;
                 case ".":
-                    if (!(this.number).includes(".")) this.number += value
+                    if (!((this.number).includes("."))) this.number += value
+                    this.screen += `${value}`
                     break;
 
                 case "+":
-                    if (!this.firstNumber) {
-                        this.firstNumber = this.number
-                        this.number = ""
-                    }
-
-                    else {
-
-                    }
                 case "-":
                 case "x":
                 case "mod":
                 case "/":
-                case "equals":
-                default:  
+                    console.log("clicks")
+
+                    if (this.firstNumber === null) {
+                        this.firstNumber = this.number
+                        this.operator = value
+                        this.number = ""
+                        this.screen += ` ${value}`
+                        
+                    }
+
+                    else if (this.operator) {
+                        this.number = this.operation(this.firstNumber, this.number, this.operator)
+                        this.firstNumber = this.number
+                        this.operator = value
+                        this.screen = this.number + " " +  this.operator
+                        this.number = ""                      
+                    }
+
+                    break;
+                
+                case "=":
+                    console.log("clicks")
+                    if (!this.operator) break;
+
+                    if (this.operator && this.number) {
+                        this.screen = `${this.operation(this.firstNumber, this.number, this.operator)}`
+                        this.operator = null
+                    }
+
+                    break;
+
+                case "AC" :
+                    this.allClear()
+                    break;
+
+                default:
+                    this.number += value  
                     this.screen += value
                     break;  
             } 
@@ -65,13 +102,10 @@ class Calculator {
     }
 
     allClear() {
-        this.answer = null
-        this.cumulative = null
-        this.currentOperator = null
-        this.nextOperator = null
-        this.currentNumber = null
-        this.nextNumber = null
-        this.screen = "0"
+        this.operator = null
+        this.number = ""
+        this.firstNumber = null
+        this.screen = ""
 
         this.showScreen()
     }
