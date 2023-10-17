@@ -4,6 +4,7 @@ class Calculator {
         this.operator = null
         this.number = ""
         this.firstNumber = null
+        this.answer = null
         this.screen = ""
     }
 
@@ -23,7 +24,12 @@ class Calculator {
 
     input (value) {
 
-        if (this.number == "") {
+        if(value==="AC") {
+            this.allClear()
+            return
+        }
+        //if there is no number in the calculator
+        if (this.number == "" && !this.answer) {
             switch (value) {
                 case ".": 
                     this.number = "0"+value
@@ -35,6 +41,7 @@ class Calculator {
                 case "/":
                 case "=":
                 case "AC":
+                case "0":
                     break;
                 
                 default: 
@@ -44,6 +51,7 @@ class Calculator {
             }            
         }
 
+        //if there is a number in the calculator
         else {
             switch (value) {
                 case "0":
@@ -58,17 +66,25 @@ class Calculator {
                 case "x":
                 case "mod":
                 case "/":
-                    console.log("clicks")
+                    if(this.answer) {
+                        this.number = this.answer
+                        this.answer = null                       
+                    }
 
+                    if (!this.number) break
+                    
+                    console.log(this.screen)
                     if (this.firstNumber === null) {
+                        
                         this.firstNumber = this.number
+                                               
                         this.operator = value
                         this.number = ""
                         this.screen += ` ${value}`
                         
                     }
 
-                    else if (this.operator) {
+                    else {
                         this.number = this.operation(this.firstNumber, this.number, this.operator)
                         this.firstNumber = this.number
                         this.operator = value
@@ -80,22 +96,30 @@ class Calculator {
                 
                 case "=":
                     console.log("clicks")
-                    if (!this.operator) break;
 
                     if (this.operator && this.number) {
-                        this.screen = `${this.operation(this.firstNumber, this.number, this.operator)}`
+                        this.answer = `${this.operation(this.firstNumber, this.number, this.operator)}`
                         this.operator = null
+                        this.number = ""
+                        this.firstNumber = null
+                        this.screen = this.answer;
                     }
 
                     break;
 
-                case "AC" :
-                    this.allClear()
-                    break;
-
                 default:
-                    this.number += value  
-                    this.screen += value
+
+                    this.number += value
+
+                    if (this.answer) {
+                        this.screen = value
+                        this.answer = null
+                    }
+                    
+                    else {
+                        this.screen += value 
+                    }
+                    
                     break;  
             } 
         }            
